@@ -37,6 +37,14 @@ class TodoStore:
         with self._lock:
             return self._items.pop(todo_id, None) is not None
 
+    def complete_all(self) -> int:
+        count = 0
+        for todo in self._items.values():
+            if not todo.done:
+                todo.done = True
+                count += 1
+        return count
+
     def clear(self) -> None:
         with self._lock:
             self._items.clear()

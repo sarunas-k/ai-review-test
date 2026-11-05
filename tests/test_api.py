@@ -32,6 +32,11 @@ def test_patch_and_delete(client):
     assert client.get("/todos/1").status_code == 404
 
 
+def test_bulk_create(client):
+    resp = client.post("/todos/bulk", json=[{"title": "a"}, {"title": "b"}])
+    assert resp.status_code == 201
+
+
 def test_missing_returns_404(client):
     assert client.get("/todos/99").status_code == 404
     assert client.patch("/todos/99", json={"done": True}).status_code == 404

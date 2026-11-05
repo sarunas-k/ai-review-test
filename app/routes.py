@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
-from app.dependencies import get_service
+from app.dependencies import get_service, store
 from app.models import Todo, TodoCreate, TodoUpdate
 from app.service import TodoNotFoundError, TodoService
 
@@ -46,3 +46,20 @@ def delete_todo(todo_id: int, service: TodoService = Depends(get_service)) -> Re
     except TodoNotFoundError as exc:
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(exc)) from exc
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/bulk", response_model=list[Todo], status_code=status.HTTP_201_CREATED)
+def create_many_todos(
+    items: list[TodoCreate], service: TodoService = Depends(get_service)
+) -> list[Todo]:
+    return service.create_many(items)
+
+
+@router.post("/complete-all")
+def complete_all_todos() -> dict[str, int]:
+    return {"completed": store.complete_all()}
+
+
+@router.get("/search", response_model=list[Todo])
+def search_todos(q: str, service: TodoService = Depends(get_service)) -> list[Todo]:
+    return service.search(q)
