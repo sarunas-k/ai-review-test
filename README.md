@@ -80,7 +80,7 @@ and posts inline comments plus one summary comment on the PR.
 | Secret theft via malicious PR code | Uses the `pull_request` trigger, **not** `pull_request_target`. Fork PRs are skipped (they have no secrets anyway). |
 | Prompt injection from PR title/body/diff | Prompt and `CLAUDE.md` treat PR content as untrusted data. Claude is limited to `Read`, `Grep`, `Glob`, `gh pr comment/diff/view` and the inline-comment tool. No general Bash, no file edits. |
 | Excess token permissions | Job permissions are `contents: read`, `pull-requests: write`, plus `id-token: write` (required by the action itself). |
-| Cost and comment spam | Draft PRs are skipped, `concurrency` cancels an in-flight review when a new commit is pushed, `--max-turns 15`, `timeout-minutes: 15`, and the summary uses a single sticky comment. |
+| Cost and comment spam | Draft PRs are skipped, `concurrency` cancels an in-flight review when a new commit is pushed, `--max-turns 25`, `timeout-minutes: 15`, and the summary uses a single sticky comment. |
 
 ### Things to know
 

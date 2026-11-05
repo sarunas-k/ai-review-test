@@ -29,6 +29,12 @@ class TodoService:
             return todos
         return [t for t in todos if t.done == done]
 
+    def search(self, query: str) -> list[Todo]:
+        return [t for t in self._store.list() if query in t.title]
+
+    def create_many(self, items: list[TodoCreate]) -> list[Todo]:
+        return [self.create(item) for item in items]
+
     def update(self, todo_id: int, data: TodoUpdate) -> Todo:
         todo = self.get(todo_id)
         changes = data.model_dump(exclude_unset=True)
