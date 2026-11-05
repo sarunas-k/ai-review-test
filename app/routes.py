@@ -2,7 +2,9 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
+from app.auth import require_admin
 from app.dependencies import get_service, store
+from app.export import export_todos
 from app.models import Todo, TodoCreate, TodoUpdate
 from app.service import TodoNotFoundError, TodoService
 
@@ -58,6 +60,16 @@ def create_many_todos(
 @router.post("/complete-all")
 def complete_all_todos() -> dict[str, int]:
     return {"completed": store.complete_all()}
+
+
+@router.post("/export")
+def export_all_todos(
+    filename: str,
+    service: TodoService = Depends(get_service),
+    _: None = Depends(require_admin),
+) -> dict[str, str]:
+    path = export_todos(service.list(), filename)
+    return {"exported_to": str(path)}
 
 
 @router.get("/search", response_model=list[Todo])

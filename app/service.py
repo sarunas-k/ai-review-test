@@ -45,3 +45,13 @@ class TodoService:
     def delete(self, todo_id: int) -> None:
         if not self._store.delete(todo_id):
             raise TodoNotFoundError(todo_id)
+
+    def delete_many(self, ids: list[int]) -> int:
+        deleted = 0
+        for todo_id in ids:
+            try:
+                self.delete(todo_id)
+                deleted += 1
+            except Exception:
+                pass
+        return deleted
